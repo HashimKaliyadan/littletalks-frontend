@@ -1,24 +1,26 @@
 import { useEffect, useRef } from 'react';
 import Footer from '../components/Footer.tsx';
+import Breadcrumbs from '../components/Breadcrumbs.tsx';
+import EmptyState from '../components/EmptyState.tsx';
 import './AboutPage.css';
 
 const teamMembers = [
   {
     name: 'Muhsin',
     role: 'Managing Director',
-    image: '/images/Muhsin.png',
+    image: '/images/Muhsin.webp',
     bio: 'Visionary leader driving Little Talk\'s strategic growth across the UAE hospitality landscape with over a decade of industry expertise.'
   },
   {
     name: 'Rabeeh',
     role: 'Medical Assistant',
-    image: '/images/Rabeeh.png',
+    image: '/images/Rabeeh.webp',
     bio: 'Orchestrates operational excellence and quality management frameworks, ensuring every client engagement exceeds industry benchmarks.'
   },
   {
     name: 'Jamsheer',
     role: 'Finance Manager',
-    image: '/images/Jamsheer.png',
+    image: '/images/Jamsheer.webp',
     bio: 'Leads technical innovation in food safety engineering and IT infrastructure, bridging cutting-edge technology with culinary operations.'
   }
 ];
@@ -119,6 +121,7 @@ function AboutPage() {
           <div className="about-hero-grid">
             {/* Left: Editorial Copy */}
             <div className="about-hero-text reveal-fade-up">
+              <Breadcrumbs />
               <span className="about-hero-label">Who We Are</span>
               <h1 className="about-hero-title">
                 About <span className="brand-gradient-text">us.</span>
@@ -155,7 +158,7 @@ function AboutPage() {
             <div className="about-hero-image-col reveal-fade-up" style={{ transitionDelay: '0.2s' }}>
               <div className="about-hero-image-wrapper">
                 <img
-                  src="/images/about_hero.png"
+                  src="/images/about_hero.webp"
                   alt="Little Talk Consultancy — Professional restaurant consultation in Dubai"
                   className="about-hero-image"
                 />
@@ -188,29 +191,38 @@ function AboutPage() {
             </p>
           </div>
 
-          <div className="about-team-grid">
-            {teamMembers.map((member, index) => (
-              <div 
-                key={member.name} 
-                className="about-team-card reveal-fade-up"
-                style={{ transitionDelay: `${0.1 + index * 0.15}s` }}
-              >
-                <div className="about-team-photo-wrapper">
-                  <img
-                    src={member.image}
-                    alt={`${member.name} — ${member.role}`}
-                    className="about-team-photo"
-                  />
-                  <div className="about-team-photo-overlay"></div>
+          {teamMembers.length === 0 ? (
+            <EmptyState 
+              title="No Team Members Found" 
+              description="We currently have no team members listed. Please contact us for more information on our leadership team."
+              showActionButton={false}
+            />
+          ) : (
+            <div className="about-team-grid">
+              {teamMembers.map((member, index) => (
+                <div 
+                  key={member.name} 
+                  className="about-team-card reveal-fade-up"
+                  style={{ transitionDelay: `${0.1 + index * 0.15}s` }}
+                >
+                  <div className="about-team-photo-wrapper">
+                    <img
+                      src={member.image}
+                      alt={`${member.name} — ${member.role}`}
+                      className="about-team-photo"
+                      loading="lazy"
+                    />
+                    <div className="about-team-photo-overlay"></div>
+                  </div>
+                  <div className="about-team-info">
+                    <h3 className="about-team-name">{member.name}</h3>
+                    <span className="about-team-role">{member.role}</span>
+                    <p className="about-team-bio">{member.bio}</p>
+                  </div>
                 </div>
-                <div className="about-team-info">
-                  <h3 className="about-team-name">{member.name}</h3>
-                  <span className="about-team-role">{member.role}</span>
-                  <p className="about-team-bio">{member.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

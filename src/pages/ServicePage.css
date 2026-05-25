@@ -29,10 +29,10 @@
 }
 
 .services-page-hero-container {
-  max-width: 1200px;
+  max-width: 100%;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 48px;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 4;
 }
@@ -114,9 +114,9 @@
 }
 
 .services-catalog-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 48px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 2;
 }
@@ -333,7 +333,7 @@
   }
   .services-page-hero-container,
   .services-catalog-container {
-    padding: 0 32px;
+    padding: 0 40px;
   }
   .services-catalog-section {
     padding: 60px 0 100px;

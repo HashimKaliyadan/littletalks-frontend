@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer.tsx';
+import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import './LegalPage.css';
 
 export default function TermsOfServicePage() {
@@ -14,13 +15,7 @@ export default function TermsOfServicePage() {
       <section className="legal-hero">
         <div className="legal-hero-bg" />
         <div className="legal-hero-content">
-          <Link to="/" className="legal-back-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 5l-7 7 7 7" />
-            </svg>
-            Back to Home
-          </Link>
-          <div className="legal-badge">Legal Document</div>
+          <Breadcrumbs />
           <h1 className="legal-hero-title">Terms of Service</h1>
           <p className="legal-hero-sub">
             Last updated: {new Date().toLocaleDateString('en-AE', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -31,25 +26,6 @@ export default function TermsOfServicePage() {
       {/* Content */}
       <main className="legal-main">
         <div className="legal-container">
-          {/* TOC */}
-          <aside className="legal-toc">
-            <h2 className="toc-title">Contents</h2>
-            <ol className="toc-list">
-              <li><a href="#acceptance">Acceptance of Terms</a></li>
-              <li><a href="#services">Description of Services</a></li>
-              <li><a href="#engagement">Client Engagement</a></li>
-              <li><a href="#payment">Payment &amp; Fees</a></li>
-              <li><a href="#ip">Intellectual Property</a></li>
-              <li><a href="#confidentiality">Confidentiality</a></li>
-              <li><a href="#disclaimers">Disclaimers</a></li>
-              <li><a href="#liability">Limitation of Liability</a></li>
-              <li><a href="#indemnification">Indemnification</a></li>
-              <li><a href="#termination">Termination</a></li>
-              <li><a href="#governing-law">Governing Law</a></li>
-              <li><a href="#changes-tos">Changes to Terms</a></li>
-              <li><a href="#contact-tos">Contact</a></li>
-            </ol>
-          </aside>
 
           {/* Body */}
           <article className="legal-body">

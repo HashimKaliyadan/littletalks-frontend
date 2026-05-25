@@ -29,10 +29,10 @@
 }
 
 .contact-page-hero-container {
-  max-width: 1200px;
+  max-width: 100%;
   width: 100%;
-  margin: 0 auto;
-  padding: 0 48px;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 4;
 }
@@ -114,9 +114,9 @@
 }
 
 .contact-page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 48px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 2;
 }
@@ -281,7 +281,7 @@
 
 .contact-form-subtitle {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--brand-lime);
   letter-spacing: 2px;
@@ -292,7 +292,7 @@
 
 .contact-form-card h2 {
   font-family: var(--font-serif);
-  font-size: 32px;
+  font-size: 48px;
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 12px;
@@ -305,6 +305,14 @@
   line-height: 1.6;
   margin-bottom: 36px;
   font-weight: 300;
+}
+
+.required-fields-note {
+  display: block;
+  margin-top: 8px;
+  font-size: 13.5px;
+  color: var(--brand-lime);
+  font-weight: 400;
 }
 
 /* Form controls */
@@ -476,6 +484,93 @@
   background-clip: text;
 }
 
+/* Container submitted state hiding transition */
+.contact-form-card.has-submitted .contact-form-original-content {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.contact-form-original-content {
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  width: 100%;
+}
+
+/* Success State in Contact Form */
+.contact-form-card .contact-success-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px;
+  z-index: 2;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.success-icon-wrapper {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(129, 215, 66, 0.08);
+  border: 2px solid var(--brand-lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-lime);
+  margin-bottom: 28px;
+  box-shadow: 0 0 30px rgba(129, 215, 66, 0.15);
+  animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.success-message-text {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 380px;
+  margin: 16px 0 32px;
+  font-weight: 300;
+}
+
+.success-message-text strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.success-reset-btn {
+  padding: 16px 32px;
+  font-size: 14.5px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    RESPONSIVE BREAKPOINTS
    ══════════════════════════════════════════════════════════════════════════ */
@@ -500,7 +595,7 @@
   }
   .contact-page-hero-container,
   .contact-page-container {
-    padding: 0 32px;
+    padding: 0 40px;
   }
   .contact-page-content {
     padding: 60px 0 100px;
@@ -508,6 +603,9 @@
   .contact-page-grid {
     grid-template-columns: 1fr;
     gap: 60px;
+  }
+  .contact-form-card h2 {
+    font-size: 38px;
   }
   .contact-info-column {
     order: 2;
@@ -537,7 +635,7 @@
     padding: 32px;
   }
   .contact-form-card h2 {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
@@ -554,5 +652,8 @@
   }
   .contact-form-card {
     padding: 24px 18px;
+  }
+  .contact-form-card h2 {
+    font-size: 26px;
   }
 }

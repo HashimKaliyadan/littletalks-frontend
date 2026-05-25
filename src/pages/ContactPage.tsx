@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useBlocker } from 'react-router-dom';
 import Footer from '../components/Footer.tsx';
+import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import './ContactPage.css';
 
 const serviceOptions = [
@@ -22,6 +23,55 @@ export default function ContactPage() {
 
   const [selectedService, setSelectedService] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Bind individual input field values to React state
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+
+  // Success states for form submission feedback
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedName, setSubmittedName] = useState('');
+
+  // Define if the form has unsaved user inputs (dirty state)
+  const isFormDirty = !!(name || email || company || phone || selectedService || message);
+  const isDirty = isFormDirty && !isSubmitting;
+
+  // React Router v7 client-side navigation blocker
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      isDirty && currentLocation.pathname !== nextLocation.pathname
+  );
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      const confirm = window.confirm(
+        'You have unsaved changes. Are you sure you want to leave?'
+      );
+      if (confirm) {
+        blocker.proceed();
+      } else {
+        blocker.reset();
+      }
+    }
+  }, [blocker]);
+
+  // Window-level confirmation before reload or close tab
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isDirty]);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -76,7 +126,21 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for your inquiry. Our team will contact you shortly!');
+    setIsSubmitting(true);
+    // Capture user's name for customized feedback before state reset
+    const nameToRegister = name;
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmittedName(nameToRegister);
+      setIsSubmitted(true);
+      // Reset all form state variables to clear dirty blocker
+      setName('');
+      setEmail('');
+      setCompany('');
+      setPhone('');
+      setSelectedService('');
+      setMessage('');
+    }, 1500);
   };
 
   return (
@@ -85,6 +149,7 @@ export default function ContactPage() {
       <section className="contact-page-hero" ref={heroRef}>
         <div className="contact-page-hero-glow"></div>
         <div className="contact-page-hero-container">
+          <Breadcrumbs />
           <div className="contact-page-hero-content reveal-fade-up">
             <span className="contact-page-hero-label">Get In Touch</span>
             <h1 className="contact-page-hero-title">
@@ -161,100 +226,164 @@ export default function ContactPage() {
 
             {/* Right Column: Premium Form */}
             <div className="contact-form-column reveal-fade-up" style={{ transitionDelay: '0.15s' }}>
-              <div className="contact-form-card">
-                <span className="contact-form-subtitle">Online Inquiry</span>
-                <h2>Send a Message</h2>
-                <p className="contact-form-hint">Fill out the fields below and our business consultants will reach back to you within 24 hours.</p>
+              <div className={`contact-form-card ${isSubmitted ? 'has-submitted' : ''}`}>
+                
+                {/* Form original content always in DOM to preserve card height */}
+                <div className="contact-form-original-content">
+                  <span className="contact-form-subtitle">Online Inquiry</span>
+                  <h2>Send a Message</h2>
+                  <p className="contact-form-hint">
+                    Fill out the fields below and our business consultants will reach back to you within 24 hours.
+                    <span className="required-fields-note">* Indicates required fields</span>
+                  </p>
 
-                <form className="contact-page-form" onSubmit={handleSubmit}>
-                  
-                  <div className="contact-form-group-row">
-                    <input type="text" placeholder="Full Name" required className="contact-page-input" />
-                    <input type="email" placeholder="Email Address" required className="contact-page-input" />
-                  </div>
-                  
-                  <div className="contact-form-group-row">
-                    <input type="text" placeholder="Company / Restaurant Name" className="contact-page-input" />
-                    <input type="tel" placeholder="Phone Number" className="contact-page-input" />
-                  </div>
-
-                  <div className="contact-form-group-full">
-                    <div className="contact-dropdown-container" ref={dropdownRef}>
-                      <button
-                        type="button"
-                        className={`contact-dropdown-trigger ${selectedService ? 'has-value' : ''} ${isDropdownOpen ? 'is-open' : ''}`}
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      >
-                        <span>
-                          {serviceOptions.find(opt => opt.value === selectedService)?.label || 'Select Service of Interest'}
-                        </span>
-                        <svg className="contact-dropdown-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </button>
-                      
-                      {isDropdownOpen && (
-                        <div className="contact-dropdown-menu">
-                          {serviceOptions.map((option) => (
-                            <div
-                              key={option.value}
-                              className={`contact-dropdown-option ${selectedService === option.value ? 'is-selected' : ''}`}
-                              onClick={() => {
-                                setSelectedService(option.value);
-                                setIsDropdownOpen(false);
-                              }}
-                            >
-                              {option.label}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      
-                      {/* Hidden select to preserve standard HTML5 validation */}
-                      <select
-                        name="service"
-                        required
-                        value={selectedService}
-                        onChange={(e) => setSelectedService(e.target.value)}
-                        style={{
-                          position: 'absolute',
-                          width: '1px',
-                          height: '1px',
-                          padding: '0',
-                          margin: '-1px',
-                          overflow: 'hidden',
-                          clip: 'rect(0, 0, 0, 0)',
-                          whiteSpace: 'nowrap',
-                          border: '0',
-                        }}
-                      >
-                        <option value="" disabled>Select Service of Interest</option>
-                        {serviceOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                  <form className="contact-page-form" onSubmit={handleSubmit}>
+                    
+                    <div className="contact-form-group-row">
+                      <input 
+                        type="text" 
+                        placeholder="Full Name *" 
+                        required 
+                        className="contact-page-input" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <input 
+                        type="email" 
+                        placeholder="Email Address *" 
+                        required 
+                        className="contact-page-input" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
                     </div>
+                    
+                    <div className="contact-form-group-row">
+                      <input 
+                        type="text" 
+                        placeholder="Company / Restaurant Name" 
+                        className="contact-page-input" 
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                      />
+                      <input 
+                        type="tel" 
+                        placeholder="Phone Number" 
+                        className="contact-page-input" 
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="contact-form-group-full">
+                      <div className="contact-dropdown-container" ref={dropdownRef}>
+                        <button
+                          type="button"
+                          className={`contact-dropdown-trigger ${selectedService ? 'has-value' : ''} ${isDropdownOpen ? 'is-open' : ''}`}
+                          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                          <span>
+                            {serviceOptions.find(opt => opt.value === selectedService)?.label || 'Select Service of Interest *'}
+                          </span>
+                          <svg className="contact-dropdown-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </button>
+                        
+                        {isDropdownOpen && (
+                          <div className="contact-dropdown-menu">
+                            {serviceOptions.map((option) => (
+                              <div
+                                key={option.value}
+                                className={`contact-dropdown-option ${selectedService === option.value ? 'is-selected' : ''}`}
+                                onClick={() => {
+                                  setSelectedService(option.value);
+                                  setIsDropdownOpen(false);
+                                }}
+                              >
+                                {option.label}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {/* Hidden select to preserve standard HTML5 validation */}
+                        <select
+                          name="service"
+                          required
+                          value={selectedService}
+                          onChange={(e) => setSelectedService(e.target.value)}
+                          style={{
+                            position: 'absolute',
+                            width: '1px',
+                            height: '1px',
+                            padding: '0',
+                            margin: '-1px',
+                            overflow: 'hidden',
+                            clip: 'rect(0, 0, 0, 0)',
+                            whiteSpace: 'nowrap',
+                            border: '0',
+                          }}
+                        >
+                          <option value="" disabled>Select Service of Interest *</option>
+                          {serviceOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="contact-form-group-full">
+                      <textarea 
+                        placeholder="Tell us about your project, target launch dates, or general consulting requirements... *" 
+                        required 
+                        className="contact-page-input contact-page-textarea"
+                        rows={5}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                      ></textarea>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary contact-submit-btn" disabled={isSubmitting}>
+                      <span>{isSubmitting ? 'Submitting...' : 'Submit Inquiry'}</span>
+                      {isSubmitting ? (
+                        <span className="btn-spinner"></span>
+                      ) : (
+                        <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </button>
+
+                  </form>
+                </div>
+
+                {/* Success message overlay rendered absolutely */}
+                {isSubmitted && (
+                  <div className="contact-success-state">
+                    <div className="success-icon-wrapper">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <h2>Inquiry Received!</h2>
+                    <p className="success-message-text">
+                      Thank you for reaching out, <strong>{submittedName}</strong>. Our team of business consultants will review your request and get back to you within 24 hours.
+                    </p>
+                    <button 
+                      type="button" 
+                      className="btn btn-primary success-reset-btn"
+                      onClick={() => setIsSubmitted(false)}
+                    >
+                      <span>Send Another Message</span>
+                      <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
                   </div>
-
-                  <div className="contact-form-group-full">
-                    <textarea 
-                      placeholder="Tell us about your project, target launch dates, or general consulting requirements..." 
-                      required 
-                      className="contact-page-input contact-page-textarea"
-                      rows={5}
-                    ></textarea>
-                  </div>
-
-                  <button type="submit" className="btn btn-primary contact-submit-btn">
-                    <span>Submit Inquiry</span>
-                    <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-
-                </form>
+                )}
               </div>
             </div>
 

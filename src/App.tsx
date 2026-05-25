@@ -1,14 +1,24 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import AboutPage from './pages/AboutPage.tsx';
-import ServicePage from './pages/ServicePage.tsx';
-import ProductPage from './pages/ProductPage.tsx';
-import ContactPage from './pages/ContactPage.tsx';
-import PartnersPage from './pages/PartnersPage.tsx';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage.tsx';
-import TermsOfServicePage from './pages/TermsOfServicePage.tsx';
 import Footer from './components/Footer.tsx';
 import './App.css';
+
+// Lazy load secondary route pages to improve bundle sizes and startup thread speeds
+const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
+const ServicePage = lazy(() => import('./pages/ServicePage.tsx'));
+const ProductPage = lazy(() => import('./pages/ProductPage.tsx'));
+const ContactPage = lazy(() => import('./pages/ContactPage.tsx'));
+const PartnersPage = lazy(() => import('./pages/PartnersPage.tsx'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage.tsx'));
+const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage.tsx'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage.tsx'));
+
+// Spinner fallback displayed during async code compilation download
+const PageLoadingLoader = () => (
+  <div className="page-suspense-loader">
+    <div className="suspense-spinner"></div>
+  </div>
+);
 
 interface Slide {
   image: string;
@@ -31,7 +41,7 @@ const slides: Slide[] = [
     description: 'Elevate your kitchen and service performance. We deliver bespoke training programs, operational standards, and concept strategies tailored for premium culinary spaces.'
   },
   {
-    image: '/images/banner2 lw copy 123.jpg',
+    image: '/images/banner2 lw.webp',
     title: 'Unforgettable Guest Dining Experiences',
     tagline: 'From Concept Planning to Operational Excellence',
     description: 'We design complete sensory journeys. From atmospheric lighting and flow to curated menu storytelling, we ensure every guest experiences pure magic.'
@@ -47,30 +57,13 @@ const navigationLinks = [
   { label: 'Contact Us', href: '/contact', isRoute: true }
 ];
 
-const serviceOptions = [
-  { value: 'restaurant-consulting', label: 'Restaurant Consulting & Planning' },
-  { value: 'legal-docs', label: 'UAE Legal & Lab Documentation' },
-  { value: 'staff-training', label: 'Staff Training & PHCA Pathway' },
-  { value: 'lab-testing', label: 'Lab Testing Services' },
-  { value: 'menu-prep', label: 'Menu Preparation & Engineering' },
-  { value: 'business-transform', label: 'Business Transformation & ISO' },
-  { value: 'product-inquiry', label: 'Product & Asset Inquiry' },
-  { value: 'general', label: 'General Inquiry' }
-];
-
 function App() {
   const location = useLocation();
   const [activeSlide, setActiveSlide] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const autoPlayTimerRef = useRef<any>(null);
   
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  // Custom dropdown state
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState('');
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Touch Swipe State
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -89,27 +82,23 @@ function App() {
     }
   }, [location.pathname, location.hash]);
 
-  // Read router state for pre-selecting service on navigation
-  useEffect(() => {
-    if (location.state && (location.state as any).selectedService) {
-      setSelectedService((location.state as any).selectedService);
-      setTimeout(() => {
-        const contactSection = document.getElementById('contact');
-        if (contactSection) {
-          contactSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-      // Clear state so it doesn't trigger again
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
-
   const getLinkHref = (link: typeof navigationLinks[0]) => {
     if (link.isRoute) return link.href;
     if (location.pathname !== '/') {
       return `/${link.href}`;
     }
     return link.href;
+  };
+
+  const isLinkActive = (link: typeof navigationLinks[0]) => {
+    if (link.isRoute) {
+      return location.pathname === link.href;
+    }
+    if (location.pathname !== '/') return false;
+    if (link.href === '#home') {
+      return !location.hash || location.hash === '#home';
+    }
+    return location.hash === link.href;
   };
 
   // Slider Handlers
@@ -123,15 +112,13 @@ function App() {
 
   // Auto-play timer
   useEffect(() => {
-    if (isAutoPlaying) {
-      autoPlayTimerRef.current = setInterval(handleNext, 5000);
-    }
+    autoPlayTimerRef.current = setInterval(handleNext, 5000);
     return () => {
       if (autoPlayTimerRef.current) {
         clearInterval(autoPlayTimerRef.current);
       }
     };
-  }, [isAutoPlaying, handleNext]);
+  }, [handleNext]);
 
   // Touch swipe detection
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -177,18 +164,7 @@ function App() {
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
-  // Click outside listener for custom dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  // Dropdown click outside listener removed since contact form migrated to a dedicated page
 
   return (
     <>
@@ -257,7 +233,11 @@ function App() {
             <img 
               src="/images/little-talK-GREEN-LOGO-png-scaled.webp" 
               alt="Little Talk Logo" 
-              className="logo-img" 
+              className="logo-img"
+              decoding="async"
+              fetchPriority="high"
+              width="250"
+              height="86"
             />
             <div className="logo-text">
               <span className="logo-main">Little Talk</span>
@@ -272,7 +252,7 @@ function App() {
                 <Link
                   key={link.label}
                   to={link.href}
-                  className="nav-link"
+                  className={`nav-link ${isLinkActive(link) ? 'active' : ''}`}
                 >
                   {link.label}
                 </Link>
@@ -280,7 +260,7 @@ function App() {
                 <a
                   key={link.label}
                   href={getLinkHref(link)}
-                  className="nav-link"
+                  className={`nav-link ${isLinkActive(link) ? 'active' : ''}`}
                 >
                   {link.label}
                 </a>
@@ -340,7 +320,9 @@ function App() {
               src="/images/little-talK-GREEN-LOGO-png-scaled.webp"
               alt="Little Talk Logo"
               className="logo-img"
-              style={{ height: '60px' }}
+              loading="lazy" decoding="async"
+              width="180"
+              height="60"
             />
             <div className="logo-text">
               <span className="logo-main">Little Talk</span>
@@ -366,7 +348,7 @@ function App() {
               <Link
                 key={link.label}
                 to={link.href}
-                className="mobile-drawer-link"
+                className={`mobile-drawer-link ${isLinkActive(link) ? 'active' : ''}`}
                 style={{ animationDelay: `${idx * 0.06}s` }}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -379,7 +361,7 @@ function App() {
               <a
                 key={link.label}
                 href={getLinkHref(link)}
-                className="mobile-drawer-link"
+                className={`mobile-drawer-link ${isLinkActive(link) ? 'active' : ''}`}
                 style={{ animationDelay: `${idx * 0.06}s` }}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -455,15 +437,16 @@ function App() {
         </div>
       </nav>
 
-      <Routes>
-      <Route path="/about" element={<AboutPage />} />
-      <Route path="/services" element={<ServicePage />} />
-      <Route path="/products" element={<ProductPage />} />
-      <Route path="/partners" element={<PartnersPage />} />
-      <Route path="/contact" element={<ContactPage />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-      <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-      <Route path="*" element={
+      <Suspense fallback={<PageLoadingLoader />}>
+        <Routes>
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/services" element={<ServicePage />} />
+          <Route path="/products" element={<ProductPage />} />
+          <Route path="/partners" element={<PartnersPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/" element={
       <>
       {/* Main Landing Content */}
       <main id="home">
@@ -474,8 +457,6 @@ function App() {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(true)}
           >
             {/* Background Slides */}
             {slides.map((slide, index) => (
@@ -581,12 +562,6 @@ function App() {
           revealEls.forEach((revealEl) => observer.observe(revealEl));
         }}>
           
-          {/* Depth Layer 1: Ambient Parallax Background Image */}
-          <div className="premium-about-bg"></div>
-          
-          {/* Depth Layer 2: Glossy Overlay to blend sections together */}
-          <div className="premium-about-overlay"></div>
-          
           {/* Depth Layer 3: Floating Premium Content Area */}
           <div className="premium-about-container">
             <div className="premium-about-glass-container reveal-fade-up">
@@ -600,6 +575,7 @@ function App() {
               {/* Header Title Grid */}
               <div className="premium-about-header">
                 <div className="premium-about-title-wrapper reveal-fade-up">
+                  <span className="premium-about-subtitle">ABOUT US</span>
                   <h2 className="premium-about-title">
                     Who is <span className="brand-gradient-text">Little Talk?</span>
                   </h2>
@@ -692,9 +668,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/services_hero.png" 
+                      src="/images/services_hero.webp" 
                       alt="Restaurant Consulting & Planning" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -708,9 +685,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/service_legal.png" 
+                      src="/images/service_legal.webp" 
                       alt="UAE Legal & Lab Documentation" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -724,9 +702,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/service_training.png" 
+                      src="/images/service_training.webp" 
                       alt="Staff Training" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -740,9 +719,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/service_testing.png" 
+                      src="/images/service_testing.webp" 
                       alt="Lab Testing Services" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -756,9 +736,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/service_menu.png" 
+                      src="/images/service_menu.webp" 
                       alt="Menu Preparation" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -772,9 +753,10 @@ function App() {
                 <div className="service-card-v2">
                   <div className="service-img-wrapper">
                     <img 
-                      src="/images/service_transform.png" 
+                      src="/images/service_transform.webp" 
                       alt="Business Transformation" 
                       className="service-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="service-img-overlay"></div>
                   </div>
@@ -852,9 +834,10 @@ function App() {
                 <div className="product-card">
                   <div className="product-img-wrapper">
                     <img 
-                      src="/images/food truck.jpg" 
+                      src="/images/food_truck.webp" 
                       alt="Custom Food Trucks" 
                       className="product-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="product-img-overlay"></div>
                   </div>
@@ -868,9 +851,10 @@ function App() {
                 <div className="product-card">
                   <div className="product-img-wrapper">
                     <img 
-                      src="/images/coffe.jpg" 
+                      src="/images/coffe.webp" 
                       alt="Professional Coffee Machines" 
                       className="product-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="product-img-overlay"></div>
                   </div>
@@ -884,9 +868,10 @@ function App() {
                 <div className="product-card">
                   <div className="product-img-wrapper">
                     <img 
-                      src="/images/vend.jpg" 
+                      src="/images/vend.webp" 
                       alt="Vending Machines" 
                       className="product-card-img"
+                      loading="lazy" decoding="async"
                     />
                     <div className="product-img-overlay"></div>
                   </div>
@@ -1382,99 +1367,19 @@ function App() {
             <div className="premium-contact-card reveal-fade-up">
               <span className="premium-contact-subtitle">Get in Touch</span>
               <h2 className="premium-contact-title">
-                Connect <span className="brand-gradient-text">us.</span>
+                Ready to Elevate Your <span className="brand-gradient-text">Culinary Brand?</span>
               </h2>
-              
-              <form className="premium-contact-form" onSubmit={(e) => e.preventDefault()}>
-                
-                <div className="form-group-row-premium">
-                  <input type="text" placeholder="Full Name" required className="form-input-premium" />
-                  <input type="email" placeholder="Email Address" required className="form-input-premium" />
-                </div>
-                
-                <div className="form-group-row-premium">
-                  <input type="text" placeholder="Company / Restaurant Name" className="form-input-premium" />
-                  <input type="tel" placeholder="Phone Number" className="form-input-premium" />
-                </div>
-
-                <div className="form-group-full-premium">
-                  <div className="custom-dropdown-container" ref={dropdownRef}>
-                    <button
-                      type="button"
-                      className={`custom-dropdown-trigger ${selectedService ? 'has-value' : ''} ${isDropdownOpen ? 'is-open' : ''}`}
-                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    >
-                      <span>
-                        {serviceOptions.find(opt => opt.value === selectedService)?.label || 'Select Service of Interest'}
-                      </span>
-                      <svg className="dropdown-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                    
-                    {isDropdownOpen && (
-                      <div className="custom-dropdown-menu">
-                        {serviceOptions.map((option) => (
-                          <div
-                            key={option.value}
-                            className={`custom-dropdown-option ${selectedService === option.value ? 'is-selected' : ''}`}
-                            onClick={() => {
-                              setSelectedService(option.value);
-                              setIsDropdownOpen(false);
-                            }}
-                          >
-                            {option.label}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {/* Hidden select to preserve standard HTML5 validation and submission */}
-                    <select
-                      name="service"
-                      required
-                      value={selectedService}
-                      onChange={(e) => setSelectedService(e.target.value)}
-                      style={{
-                        position: 'absolute',
-                        width: '1px',
-                        height: '1px',
-                        padding: '0',
-                        margin: '-1px',
-                        overflow: 'hidden',
-                        clip: 'rect(0, 0, 0, 0)',
-                        whiteSpace: 'nowrap',
-                        border: '0',
-                      }}
-                    >
-                      <option value="" disabled>Select Service of Interest</option>
-                      {serviceOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-group-full-premium">
-                  <textarea 
-                    placeholder="Tell us about your project or operational needs..." 
-                    required 
-                    className="form-input-premium form-textarea-premium"
-                    rows={4}
-                  ></textarea>
-                </div>
-
-                <div className="form-submit-row-premium">
-                  <button type="submit" className="btn btn-primary submit-btn-premium">
-                    <span>Submit Inquiry</span>
-                    <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-              </form>
+              <p className="premium-contact-desc" style={{ maxWidth: '680px', margin: '0 auto 40px', color: 'rgba(255, 255, 255, 0.7)', fontSize: '17px', lineHeight: '1.75', fontWeight: 300 }}>
+                Whether you are launching a new restaurant concept, looking to secure UAE compliance permits, seeking ISO standards, or scaling F&B operations, our team of GCC experts is ready to partner in your growth.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Link to="/contact" className="btn btn-primary" style={{ padding: '16px 48px', borderRadius: '30px', fontSize: '14.5px' }}>
+                  <span>Schedule a Consultation</span>
+                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
@@ -1483,7 +1388,9 @@ function App() {
       <Footer />
     </>
     } />
-    </Routes>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

@@ -23,7 +23,7 @@
 
 .about-section-title {
   font-family: var(--font-serif);
-  font-size: 52px;
+  font-size: 48px;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 20px;
@@ -96,9 +96,9 @@
 }
 
 .about-hero-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 48px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 2;
 }
@@ -294,9 +294,9 @@
 }
 
 .about-team-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 48px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 2;
 }
@@ -379,7 +379,7 @@
 
 .about-team-name {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 6px;
@@ -430,9 +430,9 @@
 }
 
 .about-partners-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 48px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 100px;
   position: relative;
   z-index: 2;
 }
@@ -512,7 +512,7 @@
 
 .about-partner-type {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--brand-lime);
   letter-spacing: 2px;
@@ -536,6 +536,11 @@
 
 /* ── Tablet (≤ 1024px) ── */
 @media (max-width: 1024px) {
+  .about-hero-container,
+  .about-team-container,
+  .about-partners-container {
+    padding: 0 40px;
+  }
   .about-hero-section {
     padding: 140px 0 100px;
   }
@@ -565,7 +570,7 @@
     gap: 28px;
   }
   .about-section-title {
-    font-size: 42px;
+    font-size: 38px;
   }
 
   .about-partners-grid {
@@ -607,7 +612,7 @@
     margin-bottom: 48px;
   }
   .about-section-title {
-    font-size: 36px;
+    font-size: 30px;
   }
 
   .about-team-grid {
@@ -635,5 +640,8 @@
   }
   .about-stat-number {
     font-size: 28px;
+  }
+  .about-section-title {
+    font-size: 26px;
   }
 }

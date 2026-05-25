@@ -27,6 +27,10 @@ export default function Footer() {
               src="/images/little-talK-GREEN-LOGO-png-scaled.webp"
               alt="Little Talk Logo"
               className="logo-img"
+              decoding="async"
+              loading="lazy"
+              width="180"
+              height="60"
             />
             <div className="logo-text">
               <span className="logo-main">Little Talk</span>
