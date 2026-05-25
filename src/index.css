@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Kit Color Palette */
+  --brand-navy: #030617;
+  --brand-green-mid: #309835;
+  --brand-green-deep: #0E540A;
+  --brand-lime: #81D742;
+  
+  /* Color Palette - Premium Corporate Dark Green Concept */
+  --primary: var(--brand-lime);
+  --primary-hover: #9be463;
+  --primary-light: rgba(129, 215, 66, 0.12);
+  --primary-border: rgba(129, 215, 66, 0.4);
+  
+  --bg: #030617; /* Deep Navy Obsidian base */
+  --bg-card: #0E540A; /* Contrast Deep Forest Green */
+  --text: #e2e8f0; /* Crisp slate white for text */
+  --text-heading: #ffffff; /* Brilliant white for headings */
+  --border: rgba(255, 255, 255, 0.08); /* Minimal borders */
+  --shadow: rgba(3, 6, 23, 0.5) 0px 15px 40px -5px;
+  
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Outfit', sans-serif;
+  --font-logo: 'Montserrat', sans-serif;
+  
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--text-heading);
+  margin: 0;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  padding: 0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}

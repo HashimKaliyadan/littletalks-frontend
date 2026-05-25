@@ -1,0 +1,377 @@
+/* ==========================================================================
+   Services Page — Premium Obsidian / Glassmorphism Styles
+   ========================================================================== */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   1. HERO SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+.services-page-hero {
+  position: relative;
+  padding: 180px 0 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--bg);
+}
+
+.services-page-hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(129, 215, 66, 0.05) 0%, transparent 70%);
+  filter: blur(100px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.services-page-hero-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  z-index: 4;
+}
+
+.services-page-hero-content {
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.services-page-hero-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--brand-lime);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.services-page-hero-title {
+  font-family: var(--font-serif);
+  font-size: 64px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+.services-page-hero-divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-lime), transparent);
+  border-radius: 2px;
+  margin: 24px auto 28px;
+}
+
+.services-page-hero-subtitle {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   2. SERVICES CATALOG GRID SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+.services-catalog-section {
+  position: relative;
+  padding: 80px 0 160px;
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.services-catalog-glow-1 {
+  position: absolute;
+  top: 15%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(129, 215, 66, 0.03) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.services-catalog-glow-2 {
+  position: absolute;
+  bottom: 20%;
+  right: -10%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(48, 152, 53, 0.025) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+}
+
+.services-catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.services-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+/* ─── Service Card ─── */
+.service-detail-card {
+  background: rgba(10, 12, 18, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.service-detail-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: all 0.5s ease;
+}
+
+.service-detail-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(129, 215, 66, 0.25);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(129, 215, 66, 0.05);
+}
+
+.service-detail-card:hover::before {
+  background: linear-gradient(135deg, rgba(129, 215, 66, 0.4), rgba(48, 152, 53, 0.1));
+}
+
+/* Card Image */
+.service-detail-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.service-detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.service-detail-card:hover .service-detail-image {
+  transform: scale(1.05);
+}
+
+.service-detail-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(3, 6, 23, 0.7) 100%);
+  pointer-events: none;
+}
+
+.service-detail-tag {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(10, 12, 18, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand-lime);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Card Content */
+.service-detail-content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.service-detail-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+
+.service-detail-desc {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+/* Key Offerings List */
+.service-bullets-container {
+  margin-bottom: 32px;
+  flex: 1;
+}
+
+.service-bullets-title {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--brand-lime);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.service-bullets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.service-bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.service-bullet-bullet {
+  color: var(--brand-lime);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.service-inquiry-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  margin-top: auto;
+}
+
+/* Reveal Animations */
+.reveal-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1),
+              transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.reveal-fade-up.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Brand gradient text util */
+.brand-gradient-text {
+  background: linear-gradient(135deg, var(--brand-lime), var(--brand-green-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Desktop & Tablet Large (≤ 1200px) ── */
+@media (max-width: 1200px) {
+  .services-catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+/* ── Tablet (≤ 1024px) ── */
+@media (max-width: 1024px) {
+  .services-page-hero {
+    padding: 140px 0 50px;
+  }
+  .services-page-hero-title {
+    font-size: 52px;
+  }
+  .services-page-hero-subtitle {
+    font-size: 16.5px;
+  }
+  .services-page-hero-container,
+  .services-catalog-container {
+    padding: 0 32px;
+  }
+  .services-catalog-section {
+    padding: 60px 0 100px;
+  }
+}
+
+/* ── Mobile (≤ 768px) ── */
+@media (max-width: 768px) {
+  .services-page-hero {
+    padding: 120px 0 40px;
+  }
+  .services-page-hero-title {
+    font-size: 40px;
+  }
+  .services-page-hero-container,
+  .services-catalog-container {
+    padding: 0 24px;
+  }
+  .services-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .service-detail-content {
+    padding: 24px;
+  }
+}
+
+/* ── Small Mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+  .services-page-hero {
+    padding: 100px 0 30px;
+  }
+  .services-page-hero-title {
+    font-size: 32px;
+  }
+  .services-page-hero-subtitle {
+    font-size: 15px;
+  }
+}
