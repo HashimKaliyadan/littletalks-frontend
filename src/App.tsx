@@ -714,57 +714,6 @@ function App() {
                     <p>Professional soft skills, food safety, and management training to empower your team.</p>
                   </div>
                 </div>
-
-                {/* Card 4 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/service_testing.webp" 
-                      alt="Lab Testing Services" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
-                  </div>
-                  <div className="service-card-content">
-                    <h3>Lab Testing Services</h3>
-                    <p>Ensuring the highest standards of hygiene and quality through rigorous testing.</p>
-                  </div>
-                </div>
-
-                {/* Card 5 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/service_menu.webp" 
-                      alt="Menu Preparation" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
-                  </div>
-                  <div className="service-card-content">
-                    <h3>Menu Preparation</h3>
-                    <p>Creative and cost-effective menu engineering to delight your guests.</p>
-                  </div>
-                </div>
-
-                {/* Card 6 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/service_transform.webp" 
-                      alt="Business Transformation" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
-                  </div>
-                  <div className="service-card-content">
-                    <h3>Business Transformation</h3>
-                    <p>ISO consultancy, ESG & sustainability, and business process re-engineering.</p>
-                  </div>
-                </div>
               </div>
 
               {/* Centered 'More Services' CTA */}
