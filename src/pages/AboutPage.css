@@ -221,6 +221,7 @@
   padding: 1px;
   background: linear-gradient(135deg, rgba(129, 215, 66, 0.3), rgba(255, 255, 255, 0.05));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -294,9 +295,9 @@
 }
 
 .about-team-container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
   position: relative;
   z-index: 2;
 }
@@ -327,6 +328,7 @@
   padding: 1px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -347,7 +349,7 @@
 .about-team-photo-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 
@@ -372,37 +374,37 @@
 
 /* Info Block */
 .about-team-info {
-  padding: 28px 32px 32px;
+  padding: 20px 24px 24px;
   text-align: center;
   position: relative;
 }
 
 .about-team-name {
   font-family: var(--font-serif);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .about-team-role {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--brand-lime);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   display: block;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .about-team-bio {
   font-family: var(--font-sans);
-  font-size: 14.5px;
-  line-height: 1.7;
+  font-size: 13px;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 300;
-  margin-bottom: 20px;
+  margin-bottom: 8px;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -430,9 +432,9 @@
 }
 
 .about-partners-container {
-  max-width: 100%;
-  margin: 0;
-  padding: 0 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
   position: relative;
   z-index: 2;
 }
@@ -450,7 +452,7 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 20px;
-  padding: 48px 36px;
+  padding: 32px 24px;
   text-align: center;
   position: relative;
   transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -464,6 +466,7 @@
   padding: 1px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
@@ -482,15 +485,15 @@
 
 /* Icon Ring */
 .about-partner-icon-ring {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: 1px solid rgba(129, 215, 66, 0.2);
   background: rgba(129, 215, 66, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 24px;
+  margin: 0 auto 16px;
   color: var(--brand-lime);
   transition: all 0.4s ease;
 }
@@ -504,27 +507,27 @@
 
 .about-partner-name {
   font-family: var(--font-serif);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .about-partner-type {
   font-family: var(--font-sans);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--brand-lime);
   letter-spacing: 2px;
   text-transform: uppercase;
   display: block;
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 
 .about-partner-desc {
   font-family: var(--font-sans);
-  font-size: 14.5px;
-  line-height: 1.75;
+  font-size: 13px;
+  line-height: 1.6;
   color: rgba(255, 255, 255, 0.5);
   font-weight: 300;
 }

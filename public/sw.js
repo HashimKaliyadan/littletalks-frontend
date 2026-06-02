@@ -40,7 +40,7 @@ self.addEventListener('fetch', (e) => {
   // SPA navigation routing: Serve index.html for all page navigations
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request)
+      fetch('/index.html')
         .then((networkResponse) => {
           return caches.open(CACHE_NAME).then((cache) => {
             if (networkResponse.status === 200) {

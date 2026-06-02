@@ -108,7 +108,7 @@ function AboutPage() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [teamLoading]);
 
   return (
     <>
