@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useBlocker } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { getServices, submitContactLead } from '../api/client.ts';
 import Footer from '../components/Footer.tsx';
 import Breadcrumbs from '../components/Breadcrumbs.tsx';
@@ -51,24 +51,6 @@ export default function ContactPage() {
   const isFormDirty = !!(name || email || company || phone || selectedService || message);
   const isDirty = isFormDirty && !isSubmitting;
 
-  // React Router v7 client-side navigation blocker
-  const blocker = useBlocker(
-    ({ currentLocation, nextLocation }) =>
-      isDirty && currentLocation.pathname !== nextLocation.pathname
-  );
-
-  useEffect(() => {
-    if (blocker.state === 'blocked') {
-      const confirm = window.confirm(
-        'You have unsaved changes. Are you sure you want to leave?'
-      );
-      if (confirm) {
-        blocker.proceed();
-      } else {
-        blocker.reset();
-      }
-    }
-  }, [blocker]);
 
   // Window-level confirmation before reload or close tab
   useEffect(() => {
@@ -223,7 +205,7 @@ export default function ContactPage() {
                   <div className="contact-card-text">
                     <h3>Direct Communication</h3>
                     <p>Phone: <a href="tel:+971585960727">+971 58 59 60 727</a></p>
-                    <p>Email: <a href="mailto:info@consultio.com">info@consultio.com</a></p>
+                    <p>Email: <a href="mailto:info@littletalk.ae">info@littletalk.ae</a></p>
                   </div>
                 </div>
 
@@ -366,7 +348,7 @@ export default function ContactPage() {
                         placeholder="Tell us about your project, target launch dates, or general consulting requirements... *" 
                         required 
                         className="contact-page-input contact-page-textarea"
-                        rows={5}
+                        rows={4}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                       ></textarea>

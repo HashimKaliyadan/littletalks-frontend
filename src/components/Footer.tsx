@@ -119,6 +119,7 @@ export default function Footer() {
       <div className="lt-footer-bottom">
         <p className="lt-footer-copy">© {year} Little Talk Restaurants Management LLC</p>
         <div className="lt-footer-bottom-links">
+          <a href="http://127.0.0.1:8080/dashboard.php" className="footer-admin-link">Admin</a>
           <Link to="/privacy-policy">Legal</Link>
           <Link to="/terms-of-service">Terms of service</Link>
         </div>

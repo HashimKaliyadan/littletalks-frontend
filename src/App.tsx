@@ -177,12 +177,12 @@ function App() {
         <div className={`top-utility-bar ${isScrolled ? 'scrolled' : ''}`}>
           <div className="utility-container">
             <div className="utility-left">
-              <a href="mailto:info@consultio.com" className="utility-item">
+              <a href="mailto:info@littletalk.ae" className="utility-item">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
-                info@consultio.com
+                info@littletalk.ae
               </a>
               <a href="tel:+971585960727" className="utility-item">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -394,12 +394,12 @@ function App() {
         {/* Contact Info */}
         <div className="mobile-drawer-contact">
           <div className="mobile-drawer-contact-label">CONTACT US</div>
-          <a href="mailto:info@consultio.com" className="mobile-drawer-contact-item">
+          <a href="mailto:info@littletalk.ae" className="mobile-drawer-contact-item">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
             </svg>
-            info@consultio.com
+            info@littletalk.ae
           </a>
           <a href="tel:+971585960727" className="mobile-drawer-contact-item">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -834,28 +834,6 @@ function App() {
 
                             {/* Infinite Scrolling Partner Logos Marquee */}
               <HomePartnersMarquee partners={homePartners} />
-{/* Australia Pathway Callout Banner */}
-              <div className="premium-career-banner reveal-fade-up">
-                <div className="banner-glow-spot"></div>
-                <div className="banner-left-content">
-                  <div className="banner-badge-box">
-                    <svg className="banner-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                    </svg>
-                    <span>EDUCATION & CAREER PATHWAY</span>
-                  </div>
-                  <h3>Upskill & Relocate to Australia</h3>
-                  <p>
-                    Through our elite partnership with PHCA, we offer students and hospitality staff premium educational training courses and placement pathways directly to Australia.
-                  </p>
-                </div>
-                <Link to="/partners" className="btn btn-primary banner-cta-btn">
-                  <span>Explore Opportunities</span>
-                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </Link>
-              </div>
 
             </div>
           </div>
@@ -905,17 +883,6 @@ function App() {
                 {/* Row 1: Food Safety & Engineering */}
                 <div className="why-us-laser-row reveal-fade-up">
                   <span className="row-number">01</span>
-                  <div className="row-icon-wrapper">
-                    <svg className="row-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                      <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />
-                      <path d="M12 12v.01" />
-                      <path d="M12 8v1" />
-                      <path d="M12 15v1" />
-                      <path d="M8 12h1" />
-                      <path d="M15 12h1" />
-                    </svg>
-                  </div>
                   <div className="row-text-content">
                     <h3>Food Safety & Engineering</h3>
                     <p>Ensuring state-of-the-art kitchen safety standards and mechanical layouts.</p>
@@ -925,15 +892,6 @@ function App() {
                 {/* Row 2: Microbiologists & Healthcare */}
                 <div className="why-us-laser-row reveal-fade-up">
                   <span className="row-number">02</span>
-                  <div className="row-icon-wrapper">
-                    <svg className="row-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M10 2v6.226l-6.559 11.36A2 2 0 0 0 5.176 22h13.648a2 2 0 0 0 1.735-2.973L14 8.226V2" />
-                      <path d="M8.5 2h7" />
-                      <path d="M4.615 15h14.77" />
-                      <circle cx="12" cy="18" r="1.5" />
-                      <path d="M14 12a2 2 0 0 0-4 0" />
-                    </svg>
-                  </div>
                   <div className="row-text-content">
                     <h3>Microbiologists & Healthcare</h3>
                     <p>Backed by medical research and deep hygiene compliance protocols.</p>
@@ -943,20 +901,6 @@ function App() {
                 {/* Row 3: IT & Cybersecurity */}
                 <div className="why-us-laser-row reveal-fade-up">
                   <span className="row-number">03</span>
-                  <div className="row-icon-wrapper">
-                    <svg className="row-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="2" width="20" height="20" rx="2" ry="2" />
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M12 2v7" />
-                      <path d="M12 15v7" />
-                      <path d="M2 12h7" />
-                      <path d="M15 12h7" />
-                      <path d="M4.9 4.9l3.6 3.6" />
-                      <path d="M19.1 19.1l-3.6-3.6" />
-                      <path d="M4.9 19.1l3.6-3.6" />
-                      <path d="M19.1 4.9l-3.6 3.6" />
-                    </svg>
-                  </div>
                   <div className="row-text-content">
                     <h3>IT & Cybersecurity</h3>
                     <p>Safeguarding point-of-sale systems, customer data, and tech integration.</p>
@@ -966,12 +910,6 @@ function App() {
                 {/* Row 4: ISO & Quality Management */}
                 <div className="why-us-laser-row reveal-fade-up">
                   <span className="row-number">04</span>
-                  <div className="row-icon-wrapper">
-                    <svg className="row-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-                      <path d="M9 12l2 2 4-4" />
-                    </svg>
-                  </div>
                   <div className="row-text-content">
                     <h3>ISO & Quality Management</h3>
                     <p>Standardizing F&B procedures to unlock scale, audit success, and F&B brand growth.</p>

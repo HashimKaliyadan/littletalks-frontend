@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getPartners } from '../api/client.ts';
 import type { PartnerItem } from '../types/cms.ts';
 import PartnerLogo from '../components/PartnerLogo.tsx';
@@ -9,7 +8,6 @@ import EmptyState from '../components/EmptyState.tsx';
 import './PartnersPage.css';
 
 export default function PartnersPage() {
-  const navigate = useNavigate();
   const heroRef = useRef<HTMLElement>(null);
   const partnersRef = useRef<HTMLElement>(null);
 
@@ -64,9 +62,6 @@ export default function PartnersPage() {
     return () => observer.disconnect();
   }, [isLoading]);
 
-  const handlePathwayInquiry = () => {
-    navigate('/contact', { state: { selectedService: 'staff-training' } });
-  };
 
   return (
     <>
@@ -166,44 +161,6 @@ export default function PartnersPage() {
             </div>
           )}
 
-          {/* Australia Career Pathway Highlight Banner */}
-          <div className="partners-career-banner reveal-fade-up">
-            <div className="career-banner-glow"></div>
-            <div className="career-banner-container">
-              
-              <div className="career-banner-left">
-                <div className="career-badge-box">
-                  <svg className="career-badge-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                  </svg>
-                  <span>EDUCATION & CAREER PATHWAY</span>
-                </div>
-                <h2 className="career-banner-title">Upskill & Relocate to Australia</h2>
-                <p className="career-banner-subtitle">
-                  Through our elite partnership with PHCA, we offer students and hospitality staff premium educational training courses and placement pathways directly to Australia.
-                </p>
-                <ul className="career-bullets-grid">
-                  <li>Accredited Hospitality Certifications</li>
-                  <li>Visa & Interview Coaching</li>
-                  <li>Paid Venue Internships in Australia</li>
-                  <li>Pre-departure Support & Mentorship</li>
-                </ul>
-              </div>
-
-              <div className="career-banner-right">
-                <button 
-                  onClick={handlePathwayInquiry}
-                  className="btn btn-primary career-inquiry-btn"
-                >
-                  <span>Explore Relocation Pathway</span>
-                  <svg className="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M6 12L10 8L6 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </div>
-
-            </div>
-          </div>
 
         </div>
       </section>
