@@ -1,18 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useBlocker } from 'react-router-dom';
+import { getServices, submitContactLead } from '../api/client.ts';
 import Footer from '../components/Footer.tsx';
 import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import './ContactPage.css';
 
-const serviceOptions = [
-  { value: 'restaurant-consulting', label: 'Restaurant Consulting & Planning' },
-  { value: 'legal-docs', label: 'UAE Legal & Lab Documentation' },
-  { value: 'staff-training', label: 'Staff Training & PHCA Pathway' },
-  { value: 'lab-testing', label: 'Lab Testing Services' },
-  { value: 'menu-prep', label: 'Menu Preparation & Engineering' },
-  { value: 'business-transform', label: 'Business Transformation & ISO' },
+const fallbackServiceOptions = [
   { value: 'product-inquiry', label: 'Product & Asset Inquiry' },
-  { value: 'general', label: 'General Inquiry' }
+  { value: 'general', label: 'General Inquiry' },
 ];
 
 export default function ContactPage() {
@@ -35,6 +30,22 @@ export default function ContactPage() {
   // Success states for form submission feedback
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState('');
+  const [submitError, setSubmitError] = useState('');
+  const [serviceOptions, setServiceOptions] = useState(fallbackServiceOptions);
+
+  useEffect(() => {
+    getServices()
+      .then((services) => {
+        const opts = services.map((s) => ({
+          value: s.selectKey,
+          label: s.title,
+        }));
+        opts.push({ value: 'product-inquiry', label: 'Product & Asset Inquiry' });
+        opts.push({ value: 'general', label: 'General Inquiry' });
+        setServiceOptions(opts);
+      })
+      .catch(() => setServiceOptions(fallbackServiceOptions));
+  }, []);
 
   // Define if the form has unsaved user inputs (dirty state)
   const isFormDirty = !!(name || email || company || phone || selectedService || message);
@@ -124,23 +135,34 @@ export default function ContactPage() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Capture user's name for customized feedback before state reset
+    setSubmitError('');
     const nameToRegister = name;
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await submitContactLead({
+        name,
+        email,
+        company,
+        phone,
+        service_key: selectedService,
+        message,
+        website: '',
+      });
       setSubmittedName(nameToRegister);
       setIsSubmitted(true);
-      // Reset all form state variables to clear dirty blocker
       setName('');
       setEmail('');
       setCompany('');
       setPhone('');
       setSelectedService('');
       setMessage('');
-    }, 1500);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Could not send your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -237,7 +259,11 @@ export default function ContactPage() {
                     <span className="required-fields-note">* Indicates required fields</span>
                   </p>
 
+                  {submitError && (
+                    <div className="alert alert-error" role="alert" style={{ marginBottom: 16 }}>{submitError}</div>
+                  )}
                   <form className="contact-page-form" onSubmit={handleSubmit}>
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }} aria-hidden="true" />
                     
                     <div className="contact-form-group-row">
                       <input 

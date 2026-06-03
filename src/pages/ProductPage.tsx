@@ -1,77 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getProducts } from '../api/client.ts';
+import type { ProductItem } from '../types/cms.ts';
 import Footer from '../components/Footer.tsx';
 import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import EmptyState from '../components/EmptyState.tsx';
 import './ProductPage.css';
-
-interface ProductItem {
-  id: string;
-  title: string;
-  tagline: string;
-  image: string;
-  description: string;
-  details: string[];
-}
-
-const productsData: ProductItem[] = [
-  {
-    id: 'food-trucks',
-    title: 'Custom Food Trucks',
-    tagline: 'Bespoke Mobile Culinary Hubs',
-    image: '/images/food_truck.webp',
-    description: 'High-performance, fully customized mobile kitchens designed to represent your brand on the move. Built with premium materials and optimized workflows for high-volume operations.',
-    details: [
-      'Custom stainless steel kitchen layout and counter design',
-      'Certified gas manifold and electrical wiring installations',
-      'High-capacity ventilation hoods and integrated fire suppression',
-      'Dubai Municipality and Civil Defence approval compliance',
-      'Premium chassis customization, vehicle wraps, and external LED branding'
-    ]
-  },
-  {
-    id: 'coffee-machines',
-    title: 'Professional Coffee Machines',
-    tagline: 'Precision Espresso Engineering',
-    image: '/images/coffe.webp',
-    description: 'Elite commercial espresso systems and grinding technology selected for professional baristas and high-throughput environments. Ensures consistency and speed in every extraction.',
-    details: [
-      'Multi-boiler heating technology with independent PID temperature control',
-      'Volumetric dosing and programmable pre-infusion profiles',
-      'Heavy-duty custom grinding burrs with micro-metrical adjustment',
-      'Professional-grade water filtration and softening systems',
-      'Dynamic steam wands and auto-frothing modules for rapid service'
-    ]
-  },
-  {
-    id: 'vending-machines',
-    title: 'Smart Vending Machines',
-    tagline: 'Automated Retail Solutions',
-    image: '/images/vend.webp',
-    description: 'Smart, automated dispensing kiosks designed for contact-free retail and 24/7 self-service convenience. Equipped with remote telemetry and secure digital payments.',
-    details: [
-      'Contactless card, mobile pay (Apple/Samsung Pay), and cash validator systems',
-      'Smart telemetry cloud for real-time sales and inventory tracking',
-      'Dual-zone high-efficiency cooling for fresh foods and beverages',
-      'Drop-sensor product delivery assurance technology',
-      'Sleek glass front and customizable vinyl wraps for corporate branding'
-    ]
-  }
-];
 
 export default function ProductPage() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLElement>(null);
   const productsRef = useRef<HTMLElement>(null);
 
+  const [productsData, setProductsData] = useState<ProductItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  // Simulated 1.2-second network loading delay for products
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    getProducts()
+      .then((data) => {
+        if (!cancelled) {
+          setProductsData(data);
+          setLoadError(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => { cancelled = true; };
   }, []);
 
   // Scroll to top on mount
@@ -163,6 +123,11 @@ export default function ProductPage() {
                 </div>
               ))}
             </div>
+          ) : loadError ? (
+            <EmptyState
+              title="Unable to Load Products"
+              description="Please ensure the API server is running and try again."
+            />
           ) : productsData.length === 0 ? (
             <EmptyState 
               title="No Products Available" 
@@ -172,7 +137,7 @@ export default function ProductPage() {
             <div className="products-catalog-grid">
               {productsData.map((product, index) => (
                 <div 
-                  key={product.id} 
+                  key={product.slug} 
                   className="product-detail-card reveal-fade-up"
                   style={{ transitionDelay: `${0.1 + index * 0.15}s` }}
                 >

@@ -1,29 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getTeam } from '../api/client.ts';
+import type { TeamMember } from '../types/cms.ts';
 import Footer from '../components/Footer.tsx';
 import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import EmptyState from '../components/EmptyState.tsx';
 import './AboutPage.css';
-
-const teamMembers = [
-  {
-    name: 'Muhsin',
-    role: 'Managing Director',
-    image: '/images/Muhsin.webp',
-    bio: 'Visionary leader driving Little Talk\'s strategic growth across the UAE hospitality landscape with over a decade of industry expertise.'
-  },
-  {
-    name: 'Rabeeh',
-    role: 'Medical Assistant',
-    image: '/images/Rabeeh.webp',
-    bio: 'Orchestrates operational excellence and quality management frameworks, ensuring every client engagement exceeds industry benchmarks.'
-  },
-  {
-    name: 'Jamsheer',
-    role: 'Finance Manager',
-    image: '/images/Jamsheer.webp',
-    bio: 'Leads technical innovation in food safety engineering and IT infrastructure, bridging cutting-edge technology with culinary operations.'
-  }
-];
 
 const associatePartners = [
   {
@@ -78,6 +59,27 @@ function AboutPage() {
   const heroRef = useRef<HTMLElement>(null);
   const teamRef = useRef<HTMLElement>(null);
   const partnersRef = useRef<HTMLElement>(null);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [teamLoading, setTeamLoading] = useState(true);
+  const [teamError, setTeamError] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    getTeam()
+      .then((data) => {
+        if (!cancelled) {
+          setTeamMembers(data);
+          setTeamError(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setTeamError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setTeamLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -191,7 +193,21 @@ function AboutPage() {
             </p>
           </div>
 
-          {teamMembers.length === 0 ? (
+          {teamLoading ? (
+            <div className="about-team-grid">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="about-team-card" style={{ opacity: 0.6 }}>
+                  <div className="skeleton-shimmer skeleton-block" style={{ height: 220, width: '100%' }} />
+                </div>
+              ))}
+            </div>
+          ) : teamError ? (
+            <EmptyState
+              title="Unable to Load Team"
+              description="Please ensure the API server is running and try again."
+              showActionButton={false}
+            />
+          ) : teamMembers.length === 0 ? (
             <EmptyState 
               title="No Team Members Found" 
               description="We currently have no team members listed. Please contact us for more information on our leadership team."

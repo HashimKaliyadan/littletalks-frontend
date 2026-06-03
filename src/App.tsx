@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import Footer from './components/Footer.tsx';
+import HomePartnersMarquee from './components/HomePartnersMarquee.tsx';
+import { useHomeCms } from './hooks/useHomeCms.ts';
 import './App.css';
 
 // Lazy load secondary route pages to improve bundle sizes and startup thread speeds
@@ -59,6 +61,7 @@ const navigationLinks = [
 
 function App() {
   const location = useLocation();
+  const { services: homeServices, products: homeProducts, partners: homePartners, reviews: homeReviews } = useHomeCms();
   const [activeSlide, setActiveSlide] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const autoPlayTimerRef = useRef<any>(null);
@@ -664,56 +667,23 @@ function App() {
           <div className="services-content-layer">
             <div className="services-content-inner">
               <div className="services-grid">
-                {/* Card 1 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/services_hero.webp" 
-                      alt="Restaurant Consulting & Planning" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
+                {homeServices.slice(0, 3).map((service) => (
+                  <div key={service.slug} className="service-card-v2">
+                    <div className="service-img-wrapper">
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        className="service-card-img"
+                        loading="lazy" decoding="async"
+                      />
+                      <div className="service-img-overlay"></div>
+                    </div>
+                    <div className="service-card-content">
+                      <h3>{service.title}</h3>
+                      <p>{service.tagline}</p>
+                    </div>
                   </div>
-                  <div className="service-card-content">
-                    <h3>Restaurant Consulting & Planning</h3>
-                    <p>Expert guidance from concept to launch.</p>
-                  </div>
-                </div>
-
-                {/* Card 2 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/service_legal.webp" 
-                      alt="UAE Legal & Lab Documentation" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
-                  </div>
-                  <div className="service-card-content">
-                    <h3>UAE Legal & Lab Documentation</h3>
-                    <p>Navigating local regulations, permits, and compliance with ease.</p>
-                  </div>
-                </div>
-
-                {/* Card 3 */}
-                <div className="service-card-v2">
-                  <div className="service-img-wrapper">
-                    <img 
-                      src="/images/service_training.webp" 
-                      alt="Staff Training" 
-                      className="service-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="service-img-overlay"></div>
-                  </div>
-                  <div className="service-card-content">
-                    <h3>Staff Training</h3>
-                    <p>Professional soft skills, food safety, and management training to empower your team.</p>
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Centered 'More Services' CTA */}
@@ -779,56 +749,23 @@ function App() {
           <div className="products-content-layer">
             <div className="products-content-inner">
               <div className="products-grid">
-                {/* Product 1 */}
-                <div className="product-card">
-                  <div className="product-img-wrapper">
-                    <img 
-                      src="/images/food_truck.webp" 
-                      alt="Custom Food Trucks" 
-                      className="product-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="product-img-overlay"></div>
+                {homeProducts.slice(0, 3).map((product) => (
+                  <div key={product.slug} className="product-card">
+                    <div className="product-img-wrapper">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="product-card-img"
+                        loading="lazy" decoding="async"
+                      />
+                      <div className="product-img-overlay"></div>
+                    </div>
+                    <div className="product-card-content">
+                      <h3>{product.title}</h3>
+                      <p>{product.tagline}</p>
+                    </div>
                   </div>
-                  <div className="product-card-content">
-                    <h3>Custom Food Trucks</h3>
-                    <p>Fully equipped mobile kitchens designed for modern brands.</p>
-                  </div>
-                </div>
-
-                {/* Product 2 */}
-                <div className="product-card">
-                  <div className="product-img-wrapper">
-                    <img 
-                      src="/images/coffe.webp" 
-                      alt="Professional Coffee Machines" 
-                      className="product-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="product-img-overlay"></div>
-                  </div>
-                  <div className="product-card-content">
-                    <h3>Professional Coffee Machines</h3>
-                    <p>State-of-the-art brewing technology for the perfect cup.</p>
-                  </div>
-                </div>
-
-                {/* Product 3 */}
-                <div className="product-card">
-                  <div className="product-img-wrapper">
-                    <img 
-                      src="/images/vend.webp" 
-                      alt="Vending Machines" 
-                      className="product-card-img"
-                      loading="lazy" decoding="async"
-                    />
-                    <div className="product-img-overlay"></div>
-                  </div>
-                  <div className="product-card-content">
-                    <h3>Vending Machines</h3>
-                    <p>Smart automated solutions for snacks and beverages.</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -895,164 +832,9 @@ function App() {
                 </p>
               </div>
 
-              {/* Infinite Scrolling Partner Logos Marquee */}
-              <div className="premium-partners-marquee-container reveal-fade-up">
-                <div className="premium-partners-marquee-track">
-                  
-                  {/* Set 1 */}
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-macadz">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="4" width="32" height="32" rx="8" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)"/>
-                        <path d="M11 25V15L16 20L21 15V25" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="28" cy="15" r="2.5" fill="#81D742"/>
-                        <path d="M25 25L28 19L31 25" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">Mac<span className="text-lime">Adz</span></span>
-                        <span className="logo-txt-sub">DIGITAL SOLUTIONS</span>
-                      </div>
-                    </div>
-                    <p>For cutting-edge Digital Marketing & Support.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-lawman">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 5L32 10V21C32 27.5 27 32.5 20 35C13 32.5 8 27.5 8 21V10L20 5Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M15 15H25M17 15V25M23 15V25M20 28V12" stroke="#81D742" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">LAW<span className="text-lime">MAN</span></span>
-                        <span className="logo-txt-sub">LEGAL ADVISORY</span>
-                      </div>
-                    </div>
-                    <p>For expert Legal Consultancy and compliance.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-duedrops">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 33C26.6274 33 32 27.6274 32 21C32 14.3726 20 5 20 5C20 5 8 14.3726 8 21C8 27.6274 13.3726 33 20 33Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M20 12C20 12 25 17 25 21C25 23.7614 22.7614 26 20 26" stroke="#81D742" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">due<span className="text-lime">drops</span></span>
-                        <span className="logo-txt-sub">BAKERY SUPPLIES</span>
-                      </div>
-                    </div>
-                    <p>Premium cake and pastry supplies.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-interscience">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="20" r="18" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)"/>
-                        <path d="M15 12H25M17 12V18L13 25C12.5 25.8 13.1 27 14 27H26C26.9 27 27.5 25.8 27 25L23 18V12" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M16 22H24" stroke="#81D742" strokeWidth="1.5" strokeLinecap="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">Inter<span className="text-lime">Science</span></span>
-                        <span className="logo-txt-sub">LABORATORY</span>
-                      </div>
-                    </div>
-                    <p>Our trusted partner for food testing and analysis.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-phca">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 5L32 9V20C32 26.5 27.2 31.8 20 34.5C12.8 31.8 8 26.5 8 20V9L20 5Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M14 15L20 11L26 15V22C26 24 23.5 27 20 28.5C16.5 27 14 24 14 22V15Z" stroke="#81D742" strokeWidth="1.5" strokeLinejoin="round"/>
-                        <circle cx="20" cy="18" r="2" fill="#81D742"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">PH<span className="text-lime">CA</span></span>
-                        <span className="logo-txt-sub">CULINARY ACADEMY</span>
-                      </div>
-                    </div>
-                    <p>Accredited training and Australian career relocation pathways.</p>
-                  </div>
-
-                  {/* Set 2 (Duplicate for Seamless Scroll) */}
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-macadz">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="4" y="4" width="32" height="32" rx="8" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)"/>
-                        <path d="M11 25V15L16 20L21 15V25" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <circle cx="28" cy="15" r="2.5" fill="#81D742"/>
-                        <path d="M25 25L28 19L31 25" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">Mac<span className="text-lime">Adz</span></span>
-                        <span className="logo-txt-sub">DIGITAL SOLUTIONS</span>
-                      </div>
-                    </div>
-                    <p>For cutting-edge Digital Marketing & Support.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-lawman">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 5L32 10V21C32 27.5 27 32.5 20 35C13 32.5 8 27.5 8 21V10L20 5Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M15 15H25M17 15V25M23 15V25M20 28V12" stroke="#81D742" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">LAW<span className="text-lime">MAN</span></span>
-                        <span className="logo-txt-sub">LEGAL ADVISORY</span>
-                      </div>
-                    </div>
-                    <p>For expert Legal Consultancy and compliance.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-duedrops">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 33C26.6274 33 32 27.6274 32 21C32 14.3726 20 5 20 5C20 5 8 14.3726 8 21C8 27.6274 13.3726 33 20 33Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M20 12C20 12 25 17 25 21C25 23.7614 22.7614 26 20 26" stroke="#81D742" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">due<span className="text-lime">drops</span></span>
-                        <span className="logo-txt-sub">BAKERY SUPPLIES</span>
-                      </div>
-                    </div>
-                    <p>Premium cake and pastry supplies.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-interscience">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="20" r="18" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)"/>
-                        <path d="M15 12H25M17 12V18L13 25C12.5 25.8 13.1 27 14 27H26C26.9 27 27.5 25.8 27 25L23 18V12" stroke="#81D742" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M16 22H24" stroke="#81D742" strokeWidth="1.5" strokeLinecap="round"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">Inter<span className="text-lime">Science</span></span>
-                        <span className="logo-txt-sub">LABORATORY</span>
-                      </div>
-                    </div>
-                    <p>Our trusted partner for food testing and analysis.</p>
-                  </div>
-
-                  <div className="premium-partner-card">
-                    <div className="partner-logo logo-phca">
-                      <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 5L32 9V20C32 26.5 27.2 31.8 20 34.5C12.8 31.8 8 26.5 8 20V9L20 5Z" stroke="#81D742" strokeWidth="2" fill="rgba(129, 215, 66, 0.05)" strokeLinejoin="round"/>
-                        <path d="M14 15L20 11L26 15V22C26 24 23.5 27 20 28.5C16.5 27 14 24 14 22V15Z" stroke="#81D742" strokeWidth="1.5" strokeLinejoin="round"/>
-                        <circle cx="20" cy="18" r="2" fill="#81D742"/>
-                      </svg>
-                      <div className="partner-logo-text">
-                        <span className="logo-txt-main">PH<span className="text-lime">CA</span></span>
-                        <span className="logo-txt-sub">CULINARY ACADEMY</span>
-                      </div>
-                    </div>
-                    <p>Accredited training and Australian career relocation pathways.</p>
-                  </div>
-
-                </div>
-              </div>
-
-              {/* Australia Pathway Callout Banner */}
+                            {/* Infinite Scrolling Partner Logos Marquee */}
+              <HomePartnersMarquee partners={homePartners} />
+{/* Australia Pathway Callout Banner */}
               <div className="premium-career-banner reveal-fade-up">
                 <div className="banner-glow-spot"></div>
                 <div className="banner-left-content">
@@ -1232,63 +1014,23 @@ function App() {
             </div>
             
             <div className="premium-reviews-grid">
-              {/* Review 1 */}
-              <div className="premium-review-card reveal-fade-up">
-                <div className="stars-box">
-                  {"★★★★★".split("").map((star, idx) => (
-                    <span key={idx} className="star-char">{star}</span>
-                  ))}
-                </div>
-                <p className="review-text">
-                  "Little Talk completely transformed our kitchen operations. Their training protocols helped us achieve an A-grade hygiene rating in Dubai."
-                </p>
-                <div className="review-author">
-                  <div className="author-avatar">TH</div>
-                  <div className="author-info">
-                    <h4>Tariq Al-Hashimi</h4>
-                    <span>Executive Chef, Fine Dining</span>
+              {homeReviews.map((review, index) => (
+                <div key={review.id} className="premium-review-card reveal-fade-up" style={{ transitionDelay: `${0.1 + index * 0.1}s` }}>
+                  <div className="stars-box">
+                    {Array.from({ length: review.rating }).map((_, idx) => (
+                      <span key={idx} className="star-char">★</span>
+                    ))}
+                  </div>
+                  <p className="review-text">&ldquo;{review.quote}&rdquo;</p>
+                  <div className="review-author">
+                    <div className="author-avatar">{review.avatarInitials}</div>
+                    <div className="author-info">
+                      <h4>{review.authorName}</h4>
+                      <span>{review.authorRole}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Review 2 */}
-              <div className="premium-review-card reveal-fade-up">
-                <div className="stars-box">
-                  {"★★★★★".split("").map((star, idx) => (
-                    <span key={idx} className="star-char">{star}</span>
-                  ))}
-                </div>
-                <p className="review-text">
-                  "Their ISO compliance advice was flawless. Navigating UAE documentation was completely stress-free with Lawman's legal synergy."
-                </p>
-                <div className="review-author">
-                  <div className="author-avatar">SM</div>
-                  <div className="author-info">
-                    <h4>Sara Al-Mansoori</h4>
-                    <span>F&B Director, Luxury Hotel</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Review 3 */}
-              <div className="premium-review-card reveal-fade-up">
-                <div className="stars-box">
-                  {"★★★★★".split("").map((star, idx) => (
-                    <span key={idx} className="star-char">{star}</span>
-                  ))}
-                </div>
-                <p className="review-text">
-                  "Our staff training has reached new levels. The pathway opportunity for students is an outstanding addition to culinary academy programs."
-                </p>
-                <div className="review-author">
-                  <div className="author-avatar">MK</div>
-                  <div className="author-info">
-                    <h4>Michael Kelly</h4>
-                    <span>Dean, PHCA Academy</span>
-                  </div>
-                </div>
-              </div>
-
+              ))}
             </div>
           </div>
         </section>

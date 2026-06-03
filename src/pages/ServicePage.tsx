@@ -1,126 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getServices } from '../api/client.ts';
+import type { ServiceItem } from '../types/cms.ts';
 import Footer from '../components/Footer.tsx';
 import Breadcrumbs from '../components/Breadcrumbs.tsx';
 import EmptyState from '../components/EmptyState.tsx';
 import './ServicePage.css';
-
-interface ServiceItem {
-  id: string;
-  title: string;
-  tagline: string;
-  image: string;
-  description: string;
-  details: string[];
-  selectKey: string;
-}
-
-const servicesData: ServiceItem[] = [
-  {
-    id: 'consulting',
-    title: 'Restaurant Consulting & Planning',
-    tagline: 'Concept to Launch Advisory',
-    image: '/images/services_hero.webp',
-    description: 'Elevate your culinary space with strategic roadmap design. We partner with you from initial conceptual ideation to grand opening, ensuring operational synergy and culinary distinction.',
-    details: [
-      'F&B Concept Development & Brand Positioning',
-      'Kitchen Workflow & Space Layout Design',
-      'Feasibility Studies & Financial Modelling',
-      'Pre-Opening Project Management & Checklists',
-      'Operational Audits & SOP Formulation'
-    ],
-    selectKey: 'restaurant-consulting'
-  },
-  {
-    id: 'legal',
-    title: 'UAE Legal & Lab Documentation',
-    tagline: 'Regulatory & Compliance Pathways',
-    image: '/images/service_legal.webp',
-    description: 'Navigate the complex landscape of UAE regulations seamlessly. We handle municipality registrations, chemical laboratory filings, and trade requirements so you can focus on hospitality.',
-    details: [
-      'Dubai Municipality Portal Setup & Approvals',
-      'Food Safety Permit & Trade License Clearance',
-      'Laboratory Sample Documentation & Tracking',
-      'Health & Safety Regulatory Compliance Audits',
-      'Permits for Temporary & Special Events'
-    ],
-    selectKey: 'legal-docs'
-  },
-  {
-    id: 'training',
-    title: 'Staff Training & PHCA Pathway',
-    tagline: 'Human Capital Excellence',
-    image: '/images/service_training.webp',
-    description: 'Empower your kitchen and service teams with world-class capability. Our certified training programs instill uncompromising hygiene standards and elite service culture.',
-    details: [
-      'Person in Charge (PIC) Training (Levels 2 & 3)',
-      'Basic Food Hygiene (BFH) & GHP Training',
-      'Elite Culinary Service SOPs & Etiquette',
-      'Custom Hospitality Soft Skills Mastery',
-      'Performance Assessment & Staff Development'
-    ],
-    selectKey: 'staff-training'
-  },
-  {
-    id: 'testing',
-    title: 'Lab Testing Services',
-    tagline: 'Precision Analytics & Quality Control',
-    image: '/images/service_testing.webp',
-    description: 'Ensure absolute food safety and product integrity. Through our advanced associate laboratories, we perform comprehensive biological and chemical diagnostics.',
-    details: [
-      'Microbiological & Chemical Food Analysis',
-      'Water, Ice, and Air Quality Swab Testing',
-      'Product Shelf-Life Verification & Testing',
-      'Nutritional Value Analysis & Labeling Compliance',
-      'Allergen Detection & Validation'
-    ],
-    selectKey: 'lab-testing'
-  },
-  {
-    id: 'menu',
-    title: 'Menu Preparation & Engineering',
-    tagline: 'Culinary Engineering & Optimization',
-    image: '/images/service_menu.webp',
-    description: 'Craft high-performing, cost-efficient menus that delight guests. We combine culinary creativity with rigorous recipe costing to boost profitability.',
-    details: [
-      'Menu Engineering & High-Yield Recipe Design',
-      'Standardized Recipe Costing & Portion Control',
-      'Nutritional Profile Calculations',
-      'Sensory Evaluation & Culinary Styling',
-      'Seasonal Menu Curation & Theme Events'
-    ],
-    selectKey: 'menu-prep'
-  },
-  {
-    id: 'transformation',
-    title: 'Business Transformation',
-    tagline: 'Strategic Growth & ESG Governance',
-    image: '/images/service_transform.webp',
-    description: 'Future-proof your enterprise. From implementing ISO standards and sustainability models to restructuring corporate processes, we transform operations.',
-    details: [
-      'ISO 9001, 22000 & HACCP System Consulting',
-      'ESG, Sustainability & Green Restaurant Advisory',
-      'Business Process Re-engineering (BPR)',
-      'Corporate Governance & Organizational Structuring',
-      'Digital Transformation & IT System Integration'
-    ],
-    selectKey: 'business-transform'
-  }
-];
 
 export default function ServicePage() {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLElement>(null);
   const servicesRef = useRef<HTMLElement>(null);
 
+  const [servicesData, setServicesData] = useState<ServiceItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  // Simulated 1.2-second network loading delay for services
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+    getServices()
+      .then((data) => {
+        if (!cancelled) {
+          setServicesData(data);
+          setLoadError(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => { cancelled = true; };
   }, []);
 
   // Scroll to top on mount
@@ -212,6 +123,11 @@ export default function ServicePage() {
                 </div>
               ))}
             </div>
+          ) : loadError ? (
+            <EmptyState
+              title="Unable to Load Services"
+              description="Please ensure the API server is running and try again."
+            />
           ) : servicesData.length === 0 ? (
             <EmptyState 
               title="No Services Found" 
@@ -221,7 +137,7 @@ export default function ServicePage() {
             <div className="services-catalog-grid">
               {servicesData.map((service, index) => (
                 <div 
-                  key={service.id} 
+                  key={service.slug} 
                   className="service-detail-card reveal-fade-up"
                   style={{ transitionDelay: `${0.1 + (index % 3) * 0.1}s` }}
                 >
